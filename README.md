@@ -48,16 +48,15 @@ npm run dev
 
 ## Cloudflare
 
-Η σελίδα ανεβαίνει στο Cloudflare Pages. Το API της φόρμας ταξιδεύει μαζί της, στο `dist/_worker.js`. Δεν φτιάχνεις δεύτερο Worker και δεν χρειάζεται βάση. Το Telegram το καλεί η διαδρομή `/api/tickets`.
+Ο worker που έχει ήδη τα secrets παίρνει τον κώδικα από το GitHub. Δεν ανεβαίνει αρχείο με το χέρι και δεν υπάρχει βάση.
 
-1. Στο Cloudflare: **Workers & Pages → Create → Pages → Connect to Git**.
-2. Διάλεξε το repository `TonisDev/AthleteforAthlete`.
-3. Production branch: `main`.
-4. Framework preset: Astro.
-5. Build command: `npm run build`
-6. Build output directory: `dist`
-7. Environment variable `NODE_VERSION` = `22`, αν στο build ζητήσει νεότερο Node.
-8. Μετά το πρώτο deploy: **Settings → Variables and Secrets**. Πρόσθεσε, και για Production, τα `TELEGRAM_BOT_TOKEN` και `TELEGRAM_CHAT_ID` ως encrypted. Το chat id ομάδας είναι αρνητικός αριθμός· βάλε και το μείον.
-9. Κάνε **Retry deployment** ώστε το function να δει τα secrets, και δοκίμασε τη φόρμα.
+Το όνομά του στο Cloudflare πρέπει να είναι `athlete-for-athlete`, ίδιο με το `name` στο `wrangler.jsonc`. Τα secrets είναι `TELEGRAM_BOT_TOKEN` και `TELEGRAM_CHAT_ID`.
 
-Το token δεν μπαίνει σε αρχείο του repo.
+Σύνδεση με το repo, αν δεν έχει γίνει ήδη:
+
+1. Στον worker: **Settings → Build → Connect**.
+2. Repository: `TonisDev/AthleteforAthlete`, branch `main`.
+3. Build command: `npm run build`
+4. Deploy command: `npx wrangler deploy`
+
+Μετά το πρώτο επιτυχημένο deploy, δοκίμασε τη φόρμα. Το μήνυμα φτάνει στην ομάδα του Telegram.
