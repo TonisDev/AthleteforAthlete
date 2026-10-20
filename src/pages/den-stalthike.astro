@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import { event } from '../lib/content';
+import { phoneHref } from '../lib/format';
+
+const description = 'Το αίτημα για εισιτήρια δεν στάλθηκε.';
+---
+
+<Base title="Δεν στάλθηκε — Athlete for Athlete" description={description}>
+  <main class="closure">
+    <span class="mark" aria-hidden="true"></span>
+    <p class="kicker">Athlete for Athlete</p>
+    <h1>Δεν στάλθηκε.</h1>
+    <p>
+      Πάρε μας στο <a href={phoneHref(event.phone)}>{event.phoneDisplay}</a>
+      ή στείλε στο <a href={`mailto:${event.email}`}>{event.email}</a>.
+    </p>
+    <a class="button" href="/#kratisi">Πίσω στη φόρμα</a>
+  </main>
+</Base>

@@ -1,0 +1,201 @@
+---
+import Base from '../layouts/Base.astro';
+import Countdown from '../components/Countdown.astro';
+import Marquee from '../components/Marquee.astro';
+import TicketForm from '../components/TicketForm.astro';
+import { event, salePoints, sponsors, startsAt } from '../lib/content';
+import { formatDay, formatEuros, formatShortDay, formatTime, formatWeekday, phoneHref } from '../lib/format';
+
+const sold = Math.max(0, event.ticketsSold);
+const goal = Math.max(0, event.ticketGoal);
+const raised = sold * event.ticketPrice;
+const progress = goal > 0 ? Math.min(100, Math.round((sold / goal) * 100)) : 0;
+const when = `${formatWeekday(startsAt)}, ${formatTime(startsAt)}`;
+const description =
+  'Μια βραδιά με live μουσική στη Θεσσαλονίκη. Εισιτήριο 10€ για αθλητές στίβου που δυσκολεύονται να καλύψουν την προετοιμασία τους.';
+---
+
+<Base title={`${event.title} — μια βραδιά για τον στίβο της Θεσσαλονίκης`} description={description}>
+  <header class="mast wrap">
+    <p>{event.city} · {formatShortDay(startsAt)}</p>
+    <nav aria-label="Στη σελίδα">
+      <a href="#diafaneia">Διαφάνεια</a>
+      <a href="#kratisi">Εισιτήρια</a>
+    </nav>
+  </header>
+
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <h1>
+        <span class="line">Athlete</span>
+        <span class="for">for</span>
+        <span class="line">Athlete</span>
+      </h1>
+      <p class="lede">
+        Μια βραδιά με live μουσική. Το εισιτήριο είναι {formatEuros(event.ticketPrice)} και πάει σε αθλητές στίβου
+        της Θεσσαλονίκης που δυσκολεύονται να καλύψουν την προετοιμασία τους.
+      </p>
+    </div>
+    <div class="hero-side">
+      <Countdown />
+      <p class="when">{when}</p>
+      <p class="where">«{event.venue}»</p>
+      <p class="where-sub">
+        {event.city}{event.address ? ` · ${event.address}` : ''}
+      </p>
+    </div>
+    <a class="button hero-cta" href="#kratisi">
+      <span class="price-tag">{formatEuros(event.ticketPrice)}</span>
+      Κράτησε εισιτήρια
+    </a>
+  </section>
+
+  <Marquee />
+
+  <section class="block wrap">
+    <div class="story-grid">
+      <div>
+        <p class="kicker">01 — Η βραδιά</p>
+        <h2>Πρωταθλητές στίβου, και μουσικοί.</h2>
+        <p>
+          Ο Ιορδάνης Αγαπητός και οι Andreoglou Brothers κάνουν μια βραδιά με live, όχι για να ακουστεί
+          απλώς η μουσική. Για να μαζευτεί ένα ποσό που λείπει από την προπόνηση, τους αγώνες και την αποκατάσταση.
+        </p>
+      </div>
+      <div>
+        <p class="kicker">02 — Ποιοι στηρίζονται</p>
+        <h2>Ένα παιδί από κάθε σύλλογο.</h2>
+        <p>
+          Στηρίζεται ένα παιδί από κάθε σύλλογο στίβου της Θεσσαλονίκης, μαζί με τους αθλητές που καλούν
+          τον κόσμο. Η στήριξη είναι το εισιτήριο, και ό,τι προσφέρει μια επιχείρηση σε είδος.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="lane" aria-hidden="true"></div>
+
+  <div class="paper">
+    <section class="block wrap" id="diafaneia">
+      <p class="kicker">03 — Διαφάνεια</p>
+      <h2>Τι έχει μαζευτεί.</h2>
+      <ul class="stats">
+        <li>
+          <b>{new Intl.NumberFormat('el-GR').format(sold)}</b>
+          <span>εισιτήρια</span>
+        </li>
+        <li>
+          <b>{formatEuros(raised)}</b>
+          <span>από εισιτήρια</span>
+        </li>
+        <li>
+          <b>{goal > 0 ? new Intl.NumberFormat('el-GR').format(goal) : '—'}</b>
+          <span>στόχος εισιτηρίων</span>
+        </li>
+      </ul>
+      {
+        goal > 0 && (
+          <div
+            class="meter"
+            role="img"
+            aria-label={`${sold} από ${goal} εισιτήρια, ${progress}%`}
+          >
+            <div class="meter-fill" style={`width: ${progress}%`} />
+          </div>
+        )
+      }
+      <p class="fine">
+        Ο μετρητής δείχνει εισιτήρια που έχουν ήδη κλείσει στα σημεία πώλησης. Τελευταία ενημέρωση:
+        {formatDay(event.ticketsUpdatedAt)}. Προσφορές σε είδος δεν μπαίνουν σε αυτό το νούμερο.
+        {goal === 0 ? ' Ο στόχος θα φανεί μόλις κλειδώσει ο αριθμός εισιτηρίων.' : ''}
+      </p>
+      <a class="text-link" href="#kratisi">Κράτησε εισιτήρια</a>
+    </section>
+
+    {
+      sponsors.length > 0 && (
+        <section class="wrap" id="chorigoi" style="padding-bottom: 1rem">
+          <p class="kicker">Χορηγοί</p>
+          <h2>Όσοι έδωσαν κάτι χειροπιαστό.</h2>
+          <ul class="sponsors">
+            {sponsors.map((sponsor) => {
+              const inner = (
+                <>
+                  {sponsor.logo ? <img src={sponsor.logo} alt="" /> : <span class="sponsor-name">{sponsor.name}</span>}
+                  {sponsor.logo ? <span class="sponsor-name">{sponsor.name}</span> : null}
+                  {sponsor.offer ? <small>{sponsor.offer}</small> : null}
+                </>
+              );
+              return (
+                <li>
+                  {sponsor.url ? (
+                    <a href={sponsor.url} target="_blank" rel="noopener noreferrer">
+                      {inner}
+                    </a>
+                  ) : (
+                    <span>{inner}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="block wrap" id="kratisi">
+      <div class="reserve">
+        <div>
+          <p class="kicker">04 — Εισιτήρια</p>
+          <h2>Η αγορά γίνεται από κοντά.</h2>
+          <p>
+            Συμπλήρωσε όνομα, τηλέφωνο, email και περιοχή. Σε παίρνουμε εμείς για να κανονίσουμε πόσα
+            εισιτήρια και από πού.
+          </p>
+          <div class="venue">
+            <strong>«{event.venue}»</strong>
+            <span>{when}</span>
+            {event.address ? <span>{event.address}</span> : null}
+            {
+              event.mapUrl && (
+                <a class="text-link" href={event.mapUrl}>
+                  Χάρτης
+                </a>
+              )
+            }
+          </div>
+          {
+            salePoints.length > 0 ? (
+              <ul class="points">
+                {salePoints.map((point) => (
+                  <li>
+                    <strong>{point.name}</strong>
+                    {point.area ? <span>{point.area}</span> : null}
+                    {point.address ? <span>{point.address}</span> : null}
+                    {point.hours ? <span>{point.hours}</span> : null}
+                    {point.mapUrl ? (
+                      <a href={point.mapUrl}>Χάρτης</a>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="fine">Τα σημεία παραλαβής θα γραφτούν εδώ μόλις κλειδώσουν.</p>
+            )
+          }
+        </div>
+        <TicketForm />
+      </div>
+    </section>
+
+    <footer class="footer wrap">
+      <p>{event.organizers.join(' × ')}</p>
+      <p>
+        <a href={phoneHref(event.phone)}>{event.phoneDisplay}</a>
+        {' · '}
+        <a href={`mailto:${event.email}`}>{event.email}</a>
+      </p>
+      <p class="footer-note">Για προσφορά προϊόντος ή υπηρεσίας, στο ίδιο τηλέφωνο και email.</p>
+    </footer>
+  </div>
+</Base>

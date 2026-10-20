@@ -1,0 +1,54 @@
+---
+import { athletes } from '../lib/content';
+import { initials } from '../lib/format';
+
+const sequence: typeof athletes = [];
+if (athletes.length > 0) {
+  while (sequence.length < 6) sequence.push(...athletes);
+}
+const duration = Math.max(36, sequence.length * 5.5);
+---
+
+<section class="marquee-section" aria-labelledby="athletes-heading">
+  <h2 id="athletes-heading" class="sr-only">Αθλητές που καλούν τον κόσμο</h2>
+  {
+    athletes.length === 0 ? (
+      <p class="marquee-empty wrap">Οι αθλητές που καλούν τον κόσμο θα φανούν εδώ.</p>
+    ) : (
+      <>
+        <ul class="sr-only">
+          {athletes.map((athlete) => (
+            <li>
+              {athlete.name}. {athlete.discipline}. {athlete.achievements.filter(Boolean).join(', ')}
+            </li>
+          ))}
+        </ul>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track" style={`--marquee-duration: ${duration}s`}>
+            {[sequence, sequence].map((group, groupIndex) => (
+              <div class="marquee-group" aria-hidden={groupIndex === 1 ? 'true' : undefined}>
+                {group.map((athlete) => {
+                  const credits = athlete.achievements.filter(Boolean).join(' · ');
+                  return (
+                    <article class="athlete">
+                      {athlete.image ? (
+                        <img src={athlete.image} alt="" width="56" height="56" />
+                      ) : (
+                        <span class="mono">{initials(athlete.name)}</span>
+                      )}
+                      <div class="athlete-copy">
+                        <strong>{athlete.name}</strong>
+                        <em>{athlete.discipline}</em>
+                        {credits ? <p>{credits}</p> : null}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </>
+    )
+  }
+</section>
