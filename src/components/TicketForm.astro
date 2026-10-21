@@ -1,9 +1,10 @@
 ---
 import { event } from '../lib/content';
 import { phoneHref } from '../lib/format';
+import { ticketApi } from '../lib/site';
 ---
 
-<form id="ticket-form" class="reserve-form" action="/api/tickets" method="post" accept-charset="utf-8">
+<form id="ticket-form" class="reserve-form" action={ticketApi} method="post" accept-charset="utf-8">
   <div class="fields">
     <div class="field">
       <label for="name">Όνομα</label>

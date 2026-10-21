@@ -15,6 +15,6 @@ const description = 'Το αίτημα για εισιτήρια δεν στάλ
       Πάρε μας στο <a href={phoneHref(event.phone)}>{event.phoneDisplay}</a>
       ή στείλε στο <a href={`mailto:${event.email}`}>{event.email}</a>.
     </p>
-    <a class="button" href="/#kratisi">Πίσω στη φόρμα</a>
+    <a class="button" href={`${import.meta.env.BASE_URL}#kratisi`}>Πίσω στη φόρμα</a>
   </main>
 </Base>

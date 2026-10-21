@@ -1,6 +1,7 @@
 ---
 import { athletes } from '../lib/content';
 import { initials } from '../lib/format';
+import { assetPath } from '../lib/site';
 
 const sequence: typeof athletes = [];
 if (athletes.length > 0) {
@@ -32,7 +33,7 @@ const duration = Math.max(36, sequence.length * 5.5);
                   return (
                     <article class="athlete">
                       {athlete.image ? (
-                        <img src={athlete.image} alt="" width="56" height="56" />
+                        <img src={assetPath(athlete.image)} alt="" width="56" height="56" />
                       ) : (
                         <span class="mono">{initials(athlete.name)}</span>
                       )}

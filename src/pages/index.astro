@@ -5,6 +5,7 @@ import Marquee from '../components/Marquee.astro';
 import TicketForm from '../components/TicketForm.astro';
 import { event, salePoints, sponsors, startsAt } from '../lib/content';
 import { formatDay, formatEuros, formatShortDay, formatTime, formatWeekday, phoneHref } from '../lib/format';
+import { assetPath } from '../lib/site';
 
 const sold = Math.max(0, event.ticketsSold);
 const goal = Math.max(0, event.ticketGoal);
@@ -121,7 +122,7 @@ const description =
             {sponsors.map((sponsor) => {
               const inner = (
                 <>
-                  {sponsor.logo ? <img src={sponsor.logo} alt="" /> : <span class="sponsor-name">{sponsor.name}</span>}
+                  {sponsor.logo ? <img src={assetPath(sponsor.logo)} alt="" /> : <span class="sponsor-name">{sponsor.name}</span>}
                   {sponsor.logo ? <span class="sponsor-name">{sponsor.name}</span> : null}
                   {sponsor.offer ? <small>{sponsor.offer}</small> : null}
                 </>

@@ -42,21 +42,20 @@ npm install
 npm run dev
 ```
 
-Η σελίδα ανοίγει στο `http://localhost:4321`. Χρειάζεται Node 20 ή νεότερο.
+Η σελίδα ανοίγει στο `http://localhost:4321`.
 
-Σε αυτό το μηχάνημα η φόρμα δεν στέλνει στο Telegram από το τοπικό server. Το μήνυμα φεύγει αφού η σελίδα ανέβει στο Cloudflare και μπουν τα secrets. Μέχρι τότε η φόρμα απαντά ότι η αποστολή δεν έχει ρυθμιστεί ακόμα, και δείχνει το τηλέφωνο.
+## Πού ζει τι
 
-## Cloudflare
+Κάθε push στο `main` δημοσιεύει τη σελίδα στο GitHub Pages: `https://tonisdev.github.io/AthleteforAthlete/`.
 
-Ο worker που έχει ήδη τα secrets παίρνει τον κώδικα από το GitHub. Δεν ανεβαίνει αρχείο με το χέρι και δεν υπάρχει βάση.
+Ο worker `athlete-for-athlete` δέχεται μόνο τη φόρμα και στέλνει στο Telegram. Τα secrets `TELEGRAM_BOT_TOKEN` και `TELEGRAM_CHAT_ID` μένουν εκεί. Βάση δεν υπάρχει.
 
-Το όνομά του στο Cloudflare πρέπει να είναι `athlete-for-athlete`, ίδιο με το `name` στο `wrangler.jsonc`. Τα secrets είναι `TELEGRAM_BOT_TOKEN` και `TELEGRAM_CHAT_ID`.
+Η μία φορά που ανεβαίνει ο worker, από αυτόν τον φάκελο και με Node 22:
 
-Σύνδεση με το repo, αν δεν έχει γίνει ήδη:
+```sh
+nvm use 22
+npx wrangler login
+npm run deploy:worker
+```
 
-1. Στον worker: **Settings → Build → Connect**.
-2. Repository: `TonisDev/AthleteforAthlete`, branch `main`.
-3. Build command: `npm run build`
-4. Deploy command: `npx wrangler deploy`
-
-Μετά το πρώτο επιτυχημένο deploy, δοκίμασε τη φόρμα. Το μήνυμα φτάνει στην ομάδα του Telegram.
+Μετά, αλλαγές σε ημερομηνία, αθλητές ή χορηγούς γίνονται με push. Δεν ξαναχρειάζεται Wrangler.
