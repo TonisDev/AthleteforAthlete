@@ -10,7 +10,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy:worker": "wrangler deploy"
+    "deploy:worker": "wrangler deploy",
+    "publish:pages": "node scripts/publish-pages.mjs"
   },
   "dependencies": {
     "@fontsource-variable/commissioner": "^5.2.8",

@@ -46,7 +46,14 @@ npm run dev
 
 ## Πού ζει τι
 
-Κάθε push στο `main` δημοσιεύει τη σελίδα στο GitHub Pages: `https://tonisdev.github.io/AthleteforAthlete/`.
+Η σελίδα δημοσιεύεται στο GitHub Pages, στο branch `gh-pages`: `https://tonisdev.github.io/AthleteforAthlete/`.
+
+Μετά από αλλαγή σε κείμενα ή περιεχόμενο:
+
+```sh
+npm run build
+npm run publish:pages
+```
 
 Ο worker `athlete-for-athlete` δέχεται μόνο τη φόρμα και στέλνει στο Telegram. Τα secrets `TELEGRAM_BOT_TOKEN` και `TELEGRAM_CHAT_ID` μένουν εκεί. Βάση δεν υπάρχει.
 
@@ -58,4 +65,4 @@ npx wrangler login
 npm run deploy:worker
 ```
 
-Μετά, αλλαγές σε ημερομηνία, αθλητές ή χορηγούς γίνονται με push. Δεν ξαναχρειάζεται Wrangler.
+Μετά, αλλαγές σε ημερομηνία, αθλητές ή χορηγούς δημοσιεύονται με `npm run build` και `npm run publish:pages`. Δεν ξαναχρειάζεται Wrangler.
