@@ -2,6 +2,8 @@
 import '@fontsource/gfs-didot/400.css';
 import '@fontsource-variable/commissioner';
 import '../styles/global.css';
+import { lookVars, site } from '../lib/content';
+import { assetPath } from '../lib/site';
 
 interface Props {
   title: string;
@@ -9,10 +11,15 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const { look } = site;
+const image = look.backgroundImage ? assetPath(look.backgroundImage) : '';
+const backdrop = image
+  ? `background-image:url("${image}");background-position:${look.backgroundPosition};background-size:${look.backgroundSize};background-repeat:${look.backgroundRepeat};opacity:${look.backgroundOpacity}`
+  : '';
 ---
 
 <!doctype html>
-<html lang="el">
+<html lang="el" style={lookVars(look)}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,10 +29,11 @@ const { title, description } = Astro.props;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="el_GR" />
-    <meta name="theme-color" content="#100e0c" />
-    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+    <meta name="theme-color" content={look.backgroundColor} />
+    <link rel="icon" href={assetPath('/favicon.svg')} type="image/svg+xml" />
   </head>
   <body>
+    {backdrop && <div class="backdrop" style={backdrop} aria-hidden="true" />}
     <slot />
   </body>
 </html>

@@ -77,8 +77,17 @@ export function formatEuros(amount: number) {
 
 export function phoneHref(phone: string) {
   const digits = phone.replace(/\D/g, '');
+  if (!digits) return '';
   if (digits.startsWith('30')) return `tel:+${digits}`;
   return `tel:+30${digits}`;
+}
+
+export function reachablePhone(phone: string) {
+  return phone.replace(/\D/g, '').length >= 10;
+}
+
+export function reachableEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !/example\.(com|gr|org)$/i.test(email);
 }
 
 export function initials(name: string) {

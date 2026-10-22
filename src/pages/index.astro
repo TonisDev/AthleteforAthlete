@@ -2,201 +2,222 @@
 import Base from '../layouts/Base.astro';
 import Countdown from '../components/Countdown.astro';
 import Marquee from '../components/Marquee.astro';
+import NameList from '../components/NameList.astro';
+import MessageForm from '../components/MessageForm.astro';
+import Surface from '../components/Surface.astro';
 import TicketForm from '../components/TicketForm.astro';
-import { event, salePoints, sponsors, startsAt } from '../lib/content';
-import { formatDay, formatEuros, formatShortDay, formatTime, formatWeekday, phoneHref } from '../lib/format';
+import { site, startsAt } from '../lib/content';
+import { formatDay, formatEuros, formatTime, formatWeekday, phoneHref, reachableEmail, reachablePhone } from '../lib/format';
 import { assetPath } from '../lib/site';
 
-const sold = Math.max(0, event.ticketsSold);
-const goal = Math.max(0, event.ticketGoal);
-const raised = sold * event.ticketPrice;
+const sold = Math.max(0, site.ticketsSold);
+const goal = Math.max(0, site.ticketGoal);
+const raised = sold * site.ticketPrice;
 const progress = goal > 0 ? Math.min(100, Math.round((sold / goal) * 100)) : 0;
 const when = `${formatWeekday(startsAt)}, ${formatTime(startsAt)}`;
-const description =
-  'Μια βραδιά με live μουσική στη Θεσσαλονίκη. Εισιτήριο 10€ για αθλητές στίβου που δυσκολεύονται να καλύψουν την προετοιμασία τους.';
+const phone = reachablePhone(site.contact.phone) ? phoneHref(site.contact.phone) : '';
+const email = reachableEmail(site.contact.email) ? site.contact.email : '';
 ---
 
-<Base title={`${event.title} — μια βραδιά για τον στίβο της Θεσσαλονίκης`} description={description}>
+<Base title={site.title} description={site.description}>
+  <Surface name="hero">
   <header class="mast wrap">
-    <p>{event.city} · {formatShortDay(startsAt)}</p>
-    <nav aria-label="Στη σελίδα">
-      <a href="#diafaneia">Διαφάνεια</a>
-      <a href="#kratisi">Εισιτήρια</a>
+    <nav aria-label={site.labels.nav}>
+      {site.nav.map((item) => <a href={`#${item.id}`}>{item.label}</a>)}
     </nav>
   </header>
 
-  <section class="hero wrap">
+  <div class="hero wrap">
     <div class="hero-copy">
       <h1>
-        <span class="line">Athlete</span>
-        <span class="for">for</span>
-        <span class="line">Athlete</span>
+        <span class="line">{site.hero.lineStart}</span>
+        <span class="for">{site.hero.bridge}</span>
+        <span class="line">{site.hero.lineEnd}</span>
       </h1>
-      <p class="lede">
-        Μια βραδιά με live μουσική. Το εισιτήριο είναι {formatEuros(event.ticketPrice)} και πάει σε αθλητές στίβου
-        της Θεσσαλονίκης που δυσκολεύονται να καλύψουν την προετοιμασία τους.
-      </p>
+      {site.hero.lede && <p class="lede">{site.hero.lede}</p>}
+      <div class="organizers" id={site.blocks.organizers.id}>
+        {site.blocks.organizers.kicker && <p class="kicker">{site.blocks.organizers.kicker}</p>}
+        {site.blocks.organizers.title && <h2>{site.blocks.organizers.title}</h2>}
+        <NameList items={site.organizers} />
+        {site.blocks.organizers.text && <p class="text">{site.blocks.organizers.text}</p>}
+      </div>
     </div>
     <div class="hero-side">
       <Countdown />
       <p class="when">{when}</p>
-      <p class="where">«{event.venue}»</p>
+      <p class="where">«{site.venue}»</p>
       <p class="where-sub">
-        {event.city}{event.address ? ` · ${event.address}` : ''}
+        {site.city}{site.address ? ` · ${site.address}` : ''}
       </p>
     </div>
-    <a class="button hero-cta" href="#kratisi">
-      <span class="price-tag">{formatEuros(event.ticketPrice)}</span>
-      Κράτησε εισιτήρια
+    <a class="button hero-cta" href={`#${site.blocks.tickets.id}`}>
+      <span class="price-tag">{formatEuros(site.ticketPrice)}</span>
+      {site.hero.cta}
     </a>
-  </section>
+  </div>
+  </Surface>
 
-  <Marquee />
-
-  <section class="block wrap">
-    <div class="story-grid">
-      <div>
-        <p class="kicker">01 — Η βραδιά</p>
-        <h2>Πρωταθλητές στίβου, και μουσικοί.</h2>
-        <p>
-          Ο Ιορδάνης Αγαπητός και οι Andreoglou Brothers κάνουν μια βραδιά με live, όχι για να ακουστεί
-          απλώς η μουσική. Για να μαζευτεί ένα ποσό που λείπει από την προπόνηση, τους αγώνες και την αποκατάσταση.
-        </p>
-      </div>
-      <div>
-        <p class="kicker">02 — Ποιοι στηρίζονται</p>
-        <h2>Ένα παιδί από κάθε σύλλογο.</h2>
-        <p>
-          Στηρίζεται ένα παιδί από κάθε σύλλογο στίβου της Θεσσαλονίκης, μαζί με τους αθλητές που καλούν
-          τον κόσμο. Η στήριξη είναι το εισιτήριο, και ό,τι προσφέρει μια επιχείρηση σε είδος.
-        </p>
-      </div>
+  <Surface name="athletes" class="band anchor" id={site.blocks.athletes.id} labelledby={site.blocks.athletes.title ? 'athletes-heading' : undefined}>
+    <div class="wrap band-head">
+      {site.blocks.athletes.kicker && <p class="kicker">{site.blocks.athletes.kicker}</p>}
+      {site.blocks.athletes.title && <h2 id="athletes-heading">{site.blocks.athletes.title}</h2>}
+      {site.blocks.athletes.text && <p class="text">{site.blocks.athletes.text}</p>}
     </div>
-  </section>
+    <Marquee empty={site.blocks.athletes.empty} />
+  </Surface>
+
+  <Surface name="clubs" class="band anchor" id={site.blocks.clubs.id}>
+    <div class="wrap">
+      {site.blocks.clubs.kicker && <p class="kicker">{site.blocks.clubs.kicker}</p>}
+      {site.blocks.clubs.title && <h2>{site.blocks.clubs.title}</h2>}
+      {site.blocks.clubs.text && <p class="text">{site.blocks.clubs.text}</p>}
+      {site.clubs.length > 0 ? <NameList items={site.clubs} /> : <p class="empty">{site.blocks.clubs.empty}</p>}
+    </div>
+  </Surface>
 
   <div class="lane" aria-hidden="true"></div>
 
-  <div class="paper">
-    <section class="block wrap" id="diafaneia">
-      <p class="kicker">03 — Διαφάνεια</p>
-      <h2>Τι έχει μαζευτεί.</h2>
+  <Surface name="transparency" class="block anchor" id={site.blocks.transparency.id}>
+    <div class="wrap">
+      {site.blocks.transparency.kicker && <p class="kicker">{site.blocks.transparency.kicker}</p>}
+      {site.blocks.transparency.title && <h2>{site.blocks.transparency.title}</h2>}
+      {site.blocks.transparency.text && <p class="text">{site.blocks.transparency.text}</p>}
       <ul class="stats">
         <li>
           <b>{new Intl.NumberFormat('el-GR').format(sold)}</b>
-          <span>εισιτήρια</span>
+          <span>{site.stats.sold}</span>
         </li>
         <li>
           <b>{formatEuros(raised)}</b>
-          <span>από εισιτήρια</span>
+          <span>{site.stats.raised}</span>
         </li>
         <li>
           <b>{goal > 0 ? new Intl.NumberFormat('el-GR').format(goal) : '—'}</b>
-          <span>στόχος εισιτηρίων</span>
+          <span>{site.stats.goal}</span>
         </li>
       </ul>
       {
         goal > 0 && (
-          <div
-            class="meter"
-            role="img"
-            aria-label={`${sold} από ${goal} εισιτήρια, ${progress}%`}
-          >
+          <div class="meter" role="img" aria-label={`${sold} από ${goal} ${site.stats.sold}, ${progress}%`}>
             <div class="meter-fill" style={`width: ${progress}%`} />
           </div>
         )
       }
-      <p class="fine">
-        Ο μετρητής δείχνει εισιτήρια που έχουν ήδη κλείσει στα σημεία πώλησης. Τελευταία ενημέρωση:
-        {formatDay(event.ticketsUpdatedAt)}. Προσφορές σε είδος δεν μπαίνουν σε αυτό το νούμερο.
-        {goal === 0 ? ' Ο στόχος θα φανεί μόλις κλειδώσει ο αριθμός εισιτηρίων.' : ''}
-      </p>
-      <a class="text-link" href="#kratisi">Κράτησε εισιτήρια</a>
-    </section>
+      {site.ticketsUpdatedAt && <p class="fine">{site.stats.updated}: {formatDay(site.ticketsUpdatedAt)}.</p>}
+    </div>
+  </Surface>
 
-    {
-      sponsors.length > 0 && (
-        <section class="wrap" id="chorigoi" style="padding-bottom: 1rem">
-          <p class="kicker">Χορηγοί</p>
-          <h2>Όσοι έδωσαν κάτι χειροπιαστό.</h2>
-          <ul class="sponsors">
-            {sponsors.map((sponsor) => {
-              const inner = (
-                <>
-                  {sponsor.logo ? <img src={assetPath(sponsor.logo)} alt="" /> : <span class="sponsor-name">{sponsor.name}</span>}
-                  {sponsor.logo ? <span class="sponsor-name">{sponsor.name}</span> : null}
-                  {sponsor.offer ? <small>{sponsor.offer}</small> : null}
-                </>
-              );
-              return (
-                <li>
-                  {sponsor.url ? (
-                    <a href={sponsor.url} target="_blank" rel="noopener noreferrer">
-                      {inner}
-                    </a>
-                  ) : (
-                    <span>{inner}</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )
-    }
-
-    <section class="block wrap" id="kratisi">
+  <Surface name="tickets" class="block anchor" id={site.blocks.tickets.id}>
+    <div class="wrap">
       <div class="reserve">
         <div>
-          <p class="kicker">04 — Εισιτήρια</p>
-          <h2>Η αγορά γίνεται από κοντά.</h2>
-          <p>
-            Συμπλήρωσε όνομα, τηλέφωνο, email και περιοχή. Σε παίρνουμε εμείς για να κανονίσουμε πόσα
-            εισιτήρια και από πού.
+          {site.blocks.tickets.kicker && <p class="kicker">{site.blocks.tickets.kicker}</p>}
+          {site.blocks.tickets.title && <h2>{site.blocks.tickets.title}</h2>}
+          {site.blocks.tickets.text && <p class="text">{site.blocks.tickets.text}</p>}
+          <p class="fine venue-line">
+            «{site.venue}» · {when}
+            {site.address ? ` · ${site.address}` : ''}
           </p>
-          <div class="venue">
-            <strong>«{event.venue}»</strong>
-            <span>{when}</span>
-            {event.address ? <span>{event.address}</span> : null}
-            {
-              event.mapUrl && (
-                <a class="text-link" href={event.mapUrl}>
-                  Χάρτης
-                </a>
-              )
-            }
-          </div>
           {
-            salePoints.length > 0 ? (
+            site.mapUrl && (
+              <a class="text-link" href={site.mapUrl}>
+                {site.labels.map}
+              </a>
+            )
+          }
+          {
+            site.salePoints.length > 0 ? (
               <ul class="points">
-                {salePoints.map((point) => (
+                {site.salePoints.map((point) => (
                   <li>
                     <strong>{point.name}</strong>
                     {point.area ? <span>{point.area}</span> : null}
                     {point.address ? <span>{point.address}</span> : null}
                     {point.hours ? <span>{point.hours}</span> : null}
-                    {point.mapUrl ? (
-                      <a href={point.mapUrl}>Χάρτης</a>
-                    ) : null}
+                    {point.mapUrl ? <a href={point.mapUrl}>{site.labels.map}</a> : null}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p class="fine">Τα σημεία παραλαβής θα γραφτούν εδώ μόλις κλειδώσουν.</p>
+              site.blocks.tickets.empty && <p class="empty">{site.blocks.tickets.empty}</p>
             )
           }
         </div>
         <TicketForm />
       </div>
-    </section>
+    </div>
+  </Surface>
 
-    <footer class="footer wrap">
-      <p>{event.organizers.join(' × ')}</p>
-      <p>
-        <a href={phoneHref(event.phone)}>{event.phoneDisplay}</a>
-        {' · '}
-        <a href={`mailto:${event.email}`}>{event.email}</a>
-      </p>
-      <p class="footer-note">Για προσφορά προϊόντος ή υπηρεσίας, στο ίδιο τηλέφωνο και email.</p>
-    </footer>
-  </div>
+  <Surface name="sponsors" class="block anchor" id={site.blocks.sponsors.id}>
+    <div class="wrap">
+      {site.blocks.sponsors.kicker && <p class="kicker">{site.blocks.sponsors.kicker}</p>}
+      {
+        site.sponsors.length > 0 && (
+          <>
+            {site.blocks.sponsors.title && <h2>{site.blocks.sponsors.title}</h2>}
+            {site.blocks.sponsors.text && <p class="text">{site.blocks.sponsors.text}</p>}
+            <ul class="sponsors">
+              {site.sponsors.map((sponsor) => {
+                const inner = (
+                  <>
+                    {sponsor.logo ? <img src={assetPath(sponsor.logo)} alt="" /> : null}
+                    <span>
+                      <span class="sponsor-name">{sponsor.name}</span>
+                      {sponsor.offer ? <small>{sponsor.offer}</small> : null}
+                    </span>
+                  </>
+                );
+                return (
+                  <li class={`is-${sponsor.size}`}>
+                    {sponsor.url ? (
+                      <a href={sponsor.url} target="_blank" rel="noopener noreferrer">
+                        {inner}
+                      </a>
+                    ) : (
+                      <span>{inner}</span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )
+      }
+      {site.blocks.sponsors.askTitle && <h2 class="ask-title">{site.blocks.sponsors.askTitle}</h2>}
+      {site.blocks.sponsors.askText && <p class="text">{site.blocks.sponsors.askText}</p>}
+      <a class="button" href="#message">{site.labels.sponsorCta}</a>
+    </div>
+  </Surface>
+
+  <Surface name="contact" class="block anchor" id={site.blocks.contact.id}>
+    <div class="wrap">
+      {site.blocks.contact.kicker && <p class="kicker">{site.blocks.contact.kicker}</p>}
+      {site.blocks.contact.title && <h2>{site.blocks.contact.title}</h2>}
+      {site.blocks.contact.text && <p class="text">{site.blocks.contact.text}</p>}
+      {
+        (phone || email) && (
+          <ul class="contact-list">
+            {phone && (
+              <li>
+                <span>{site.labels.phone}</span>
+                <a href={phone}>{site.contact.phoneDisplay || site.contact.phone}</a>
+              </li>
+            )}
+            {email && (
+              <li>
+                <span>{site.labels.email}</span>
+                <a href={`mailto:${email}`}>{site.contact.email}</a>
+              </li>
+            )}
+          </ul>
+        )
+      }
+      <div class="reserve">
+        <MessageForm />
+      </div>
+      <footer class="footer">
+        <p>{site.organizers.map((person) => person.name).join(' · ')}</p>
+      </footer>
+    </div>
+  </Surface>
 </Base>

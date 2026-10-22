@@ -1,5 +1,4 @@
 const site = 'https://tonisdev.github.io/AthleteforAthlete';
-const phoneFallback = '694 377 3009';
 const allowedOrigins = new Set([
   'https://tonisdev.github.io',
   'http://localhost:4321',
@@ -9,6 +8,22 @@ const allowedOrigins = new Set([
 function clean(value, max) {
   if (typeof value !== 'string') return '';
   return value.replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+function cleanBlock(value, max) {
+  if (typeof value !== 'string') return '';
+  return value.replace(/\r\n/g, '\n').trim().slice(0, max);
+}
+
+function validEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function contactError(phone, email, digits) {
+  if (phone && (digits.length < 8 || digits.length > 15)) return 'Το τηλέφωνο δεν φαίνεται σωστό.';
+  if (email && !validEmail(email)) return 'Το email δεν φαίνεται σωστό.';
+  if (!phone && !email) return 'Άφησε τηλέφωνο ή email, για να επικοινωνήσουμε μαζί σου.';
+  return '';
 }
 
 function allowedOrigin(request) {
@@ -65,23 +80,51 @@ async function submit(request, env) {
   }
 
   if (clean(form.get('company'), 120)) {
-    return answer(request, origin, true, 'Τα λάβαμε. Θα επικοινωνήσουμε μαζί σου για τα εισιτήρια.', 200);
+    return answer(request, origin, true, 'Τα λάβαμε. Θα επικοινωνήσουμε μαζί σου.', 200);
   }
 
+  const intent = clean(form.get('intent'), 20);
   const name = clean(form.get('name'), 80);
   const phone = clean(form.get('phone'), 30);
   const email = clean(form.get('email'), 120);
-  const area = clean(form.get('area'), 80);
   const digits = phone.replace(/\D/g, '');
 
-  if (name.length < 2) return answer(request, origin, false, 'Γράψε το όνομά σου.', 400);
-  if (digits.length < 8 || digits.length > 15) {
-    return answer(request, origin, false, 'Το τηλέφωνο δεν φαίνεται σωστό.', 400);
+  if (name.length < 2) return answer(request, origin, false, 'Συμπλήρωσε το όνομά σου.', 400);
+  const missingContact = contactError(phone, email, digits);
+  if (missingContact) return answer(request, origin, false, missingContact, 400);
+
+  let text;
+  if (intent === 'message') {
+    const message = cleanBlock(form.get('message'), 1000);
+    if (message.length < 2) return answer(request, origin, false, 'Γράψε το μήνυμά σου.', 400);
+    text = [
+      'Νέο μήνυμα',
+      'Athlete for Athlete',
+      '',
+      `Όνομα: ${name}`,
+      `Τηλέφωνο: ${phone || '—'}`,
+      `Email: ${email || '—'}`,
+      '',
+      message,
+    ].join('\n');
+  } else {
+    const area = clean(form.get('area'), 80);
+    const count = Number(clean(form.get('count'), 4));
+    if (area.length < 2) return answer(request, origin, false, 'Συμπλήρωσε την περιοχή σου.', 400);
+    if (!Number.isInteger(count) || count < 1 || count > 20) {
+      return answer(request, origin, false, 'Ο αριθμός εισιτηρίων δεν φαίνεται σωστός.', 400);
+    }
+    text = [
+      'Νέο αίτημα εισιτηρίων',
+      'Athlete for Athlete',
+      '',
+      `Όνομα: ${name}`,
+      `Τηλέφωνο: ${phone || '—'}`,
+      `Email: ${email || '—'}`,
+      `Περιοχή: ${area}`,
+      `Εισιτήρια: ${count}`,
+    ].join('\n');
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return answer(request, origin, false, 'Το email δεν φαίνεται σωστό.', 400);
-  }
-  if (area.length < 2) return answer(request, origin, false, 'Γράψε την περιοχή σου.', 400);
 
   const token = env.TELEGRAM_BOT_TOKEN;
   const chatId = env.TELEGRAM_CHAT_ID;
@@ -90,20 +133,10 @@ async function submit(request, env) {
       request,
       origin,
       false,
-      `Η αποστολή δεν έχει ρυθμιστεί ακόμα. Πάρε μας στο ${phoneFallback}.`,
+      'Η αποστολή δεν έχει ρυθμιστεί ακόμα.',
       503,
     );
   }
-
-  const text = [
-    'Νέο αίτημα εισιτηρίων',
-    'Athlete for Athlete',
-    '',
-    `Όνομα: ${name}`,
-    `Τηλέφωνο: ${phone}`,
-    `Email: ${email}`,
-    `Περιοχή: ${area}`,
-  ].join('\n');
 
   let telegram;
   try {
@@ -118,15 +151,18 @@ async function submit(request, env) {
     });
   } catch (error) {
     console.error('Telegram request failed', error instanceof Error ? error.message : 'unknown');
-    return answer(request, origin, false, `Δεν στάλθηκε. Πάρε μας στο ${phoneFallback}.`, 502);
+    return answer(request, origin, false, 'Δεν στάλθηκε. Δοκίμασε ξανά.', 502);
   }
 
   if (!telegram.ok) {
     console.error('Telegram rejected the message', telegram.status);
-    return answer(request, origin, false, `Δεν στάλθηκε. Πάρε μας στο ${phoneFallback}.`, 502);
+    return answer(request, origin, false, 'Δεν στάλθηκε. Δοκίμασε ξανά.', 502);
   }
 
-  return answer(request, origin, true, 'Τα λάβαμε. Θα επικοινωνήσουμε μαζί σου για τα εισιτήρια.', 200);
+  const thanks = intent === 'message'
+    ? 'Το μήνυμα έφτασε. Θα επικοινωνήσουμε μαζί σου.'
+    : 'Τα λάβαμε. Θα επικοινωνήσουμε μαζί σου.';
+  return answer(request, origin, true, thanks, 200);
 }
 
 export default {

@@ -1,33 +1,34 @@
 ---
-import { startsAt } from '../lib/content';
+import { site, startsAt } from '../lib/content';
 import { pad, remainingParts } from '../lib/format';
 
 const parts = remainingParts(startsAt);
+const labels = site.countdown;
 ---
 
-<div class:list={['countdown', { 'is-done': parts.done }]} data-countdown={startsAt}>
+<div class:list={['countdown', { 'is-done': parts.done }]} data-countdown={startsAt} data-done={labels.done} style={`--wash:${site.look.countdownWash}`}>
   {
     parts.done ? (
-      'Η βραδιά έχει ξεκινήσει.'
+      labels.done
     ) : (
       <>
-        <p class="kicker">Μένουν</p>
+        <p class="kicker">{labels.label}</p>
         <div class="countdown-grid">
           <div>
             <b data-days>{pad(parts.days)}</b>
-            <span>ημέρες</span>
+            <span>{labels.days}</span>
           </div>
           <div>
             <b data-hours>{pad(parts.hours)}</b>
-            <span>ώρες</span>
+            <span>{labels.hours}</span>
           </div>
           <div>
             <b data-minutes>{pad(parts.minutes)}</b>
-            <span>λεπτά</span>
+            <span>{labels.minutes}</span>
           </div>
           <div>
             <b data-seconds>{pad(parts.seconds)}</b>
-            <span>δευτερόλεπτα</span>
+            <span>{labels.seconds}</span>
           </div>
         </div>
       </>
@@ -53,7 +54,7 @@ const parts = remainingParts(startsAt);
       if (diff <= 0) {
         window.clearInterval(timer);
         node.classList.add('is-done');
-        node.textContent = 'Η βραδιά έχει ξεκινήσει.';
+        node.textContent = node.dataset.done || '';
         return;
       }
       const total = Math.floor(diff / 1000);

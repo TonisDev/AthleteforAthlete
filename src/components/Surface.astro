@@ -1,0 +1,28 @@
+---
+import { site } from '../lib/content';
+import { assetPath } from '../lib/site';
+
+interface Props {
+  name: keyof typeof site.look.sections;
+  class?: string;
+  id?: string;
+  labelledby?: string;
+}
+
+const { name, class: className, id, labelledby } = Astro.props;
+const face = site.look.sections[name];
+const image = face.image ? assetPath(face.image) : '';
+const imageStyle = image
+  ? `background-image:url("${image}");background-position:${face.position};background-size:${face.size};background-repeat:no-repeat;opacity:${face.opacity}`
+  : '';
+---
+
+<section
+  class:list={['surface', `tone-${face.tone}`, className]}
+  id={id}
+  aria-labelledby={labelledby}
+  style={`background-color:${face.color}`}
+>
+  {imageStyle && <div class="surface-image" style={imageStyle} aria-hidden="true" />}
+  <slot />
+</section>

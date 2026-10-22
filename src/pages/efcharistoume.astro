@@ -1,20 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
-import { event } from '../lib/content';
-import { phoneHref } from '../lib/format';
-
-const description = 'Λάβαμε τα στοιχεία σου και θα επικοινωνήσουμε για τα εισιτήρια.';
+import { site } from '../lib/content';
+import { basePath } from '../lib/site';
 ---
 
-<Base title="Τα λάβαμε — Athlete for Athlete" description={description}>
+<Base title={`${site.notices.thanksTitle} — ${site.title}`} description={site.notices.thanksText}>
   <main class="closure">
     <span class="mark" aria-hidden="true"></span>
-    <p class="kicker">Athlete for Athlete</p>
-    <h1>Τα λάβαμε.</h1>
-    <p>Θα επικοινωνήσουμε μαζί σου για τα εισιτήρια.</p>
-    <p>
-      Αν βιάζεσαι, πάρε μας στο <a href={phoneHref(event.phone)}>{event.phoneDisplay}</a>.
-    </p>
-    <a class="button" href={import.meta.env.BASE_URL}>Πίσω στη σελίδα</a>
+    <p class="kicker">{site.title}</p>
+    <h1>{site.notices.thanksTitle}</h1>
+    <p>{site.notices.thanksText}</p>
+    <a class="button" href={basePath}>{site.labels.back}</a>
   </main>
 </Base>

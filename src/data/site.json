@@ -1,0 +1,171 @@
+{
+  "title": "Athlete for Athlete",
+  "description": "Live μουσική στη Θεσσαλονίκη. Το εισιτήριο πάει στον στίβο.",
+  "city": "Θεσσαλονίκη",
+  "date": "2026-11-01",
+  "time": "20:00",
+  "venue": "Remvi cafe bar restaurant",
+  "address": "",
+  "mapUrl": "",
+  "ticketPrice": 10,
+  "ticketGoal": 0,
+  "ticketsSold": 0,
+  "ticketsUpdatedAt": "2026-10-20",
+  "hero": {
+    "lineStart": "Athlete",
+    "bridge": "for",
+    "lineEnd": "Athlete",
+    "lede": "Live μουσική. Το εισιτήριο πάει στον στίβο της Θεσσαλονίκης.",
+    "cta": "Κράτησε εισιτήρια"
+  },
+  "nav": [
+    { "id": "syllogoi", "label": "Σύλλογοι" },
+    { "id": "diafaneia", "label": "Διαφάνεια" },
+    { "id": "kratisi", "label": "Εισιτήρια" },
+    { "id": "chorigoi", "label": "Χορηγοί" },
+    { "id": "epikoinonia", "label": "Επικοινωνία" }
+  ],
+  "blocks": {
+    "organizers": {
+      "id": "diorganosi",
+      "kicker": "Διοργάνωση",
+      "title": "",
+      "text": "",
+      "empty": ""
+    },
+    "athletes": {
+      "id": "athlites",
+      "kicker": "Αθλητές",
+      "title": "Καλούν τον κόσμο.",
+      "text": "",
+      "empty": "Τα ονόματα μπαίνουν εδώ."
+    },
+    "clubs": {
+      "id": "syllogoi",
+      "kicker": "Σύλλογοι",
+      "title": "Ένα παιδί από κάθε σύλλογο.",
+      "text": "Η στήριξη πάει σε αυτούς.",
+      "empty": "Τα ονόματα μπαίνουν εδώ."
+    },
+    "transparency": {
+      "id": "diafaneia",
+      "kicker": "Διαφάνεια",
+      "title": "Τι έχει μαζευτεί.",
+      "text": "Μετράνε μόνο τα εισιτήρια.",
+      "empty": ""
+    },
+    "sponsors": {
+      "id": "chorigoi",
+      "kicker": "Χορηγοί",
+      "title": "Όσοι στηρίζουν.",
+      "text": "",
+      "empty": "",
+      "askTitle": "Θες να γίνεις χορηγός;",
+      "askText": "Πες μας τι μπορείς να προσφέρεις και άφησε έναν τρόπο επικοινωνίας."
+    },
+    "tickets": {
+      "id": "kratisi",
+      "kicker": "Εισιτήρια",
+      "title": "Από κοντά.",
+      "text": "Στα σημεία πώλησης, ή με τα στοιχεία σου. Θα επικοινωνήσουμε μαζί σου.",
+      "empty": "Τα σημεία πώλησης θα γραφτούν εδώ."
+    },
+    "contact": {
+      "id": "epikoinonia",
+      "kicker": "Επικοινωνία",
+      "title": "Επικοινώνησε μαζί μας.",
+      "text": "Γράψε το μήνυμά σου και έναν τρόπο να σε βρούμε.",
+      "empty": ""
+    }
+  },
+  "countdown": {
+    "label": "Μένουν",
+    "done": "Η βραδιά έχει ξεκινήσει.",
+    "days": "ημέρες",
+    "hours": "ώρες",
+    "minutes": "λεπτά",
+    "seconds": "δευτερόλεπτα"
+  },
+  "stats": {
+    "sold": "εισιτήρια",
+    "raised": "από εισιτήρια",
+    "goal": "στόχος",
+    "updated": "Τελευταία ενημέρωση"
+  },
+  "labels": {
+    "nav": "Στη σελίδα",
+    "map": "Χάρτης",
+    "phone": "Τηλέφωνο",
+    "email": "Email",
+    "back": "Πίσω στη σελίδα",
+    "backToForm": "Πίσω στη φόρμα",
+    "sponsorCta": "Στείλε μας μήνυμα"
+  },
+  "form": {
+    "name": "Όνομα",
+    "phone": "Τηλέφωνο",
+    "email": "Email",
+    "area": "Περιοχή",
+    "count": "Αριθμός εισιτηρίων",
+    "countMax": 20,
+    "phonePlaceholder": "69xxxxxxxx",
+    "areaPlaceholder": "π.χ. Καλαμαριά",
+    "either": "Αρκεί τηλέφωνο ή email.",
+    "submit": "Ζήτησε εισιτήρια",
+    "privacy": "Τα στοιχεία χρησιμοποιούνται μόνο για την επικοινωνία μαζί σου.",
+    "fail": "Δεν στάλθηκε. Δοκίμασε ξανά."
+  },
+  "message": {
+    "name": "Όνομα",
+    "phone": "Τηλέφωνο",
+    "email": "Email",
+    "body": "Μήνυμα",
+    "bodyPlaceholder": "Γράψε εδώ και άφησε τηλέφωνο ή email.",
+    "either": "Αρκεί τηλέφωνο ή email.",
+    "submit": "Στείλε το μήνυμα",
+    "privacy": "Το μήνυμα φτάνει μόνο σε εμάς.",
+    "fail": "Δεν στάλθηκε. Δοκίμασε ξανά."
+  },
+  "notices": {
+    "thanksTitle": "Τα λάβαμε.",
+    "thanksText": "Θα επικοινωνήσουμε για τα εισιτήρια.",
+    "failedTitle": "Δεν στάλθηκε.",
+    "failedText": "Δοκίμασε ξανά από τη φόρμα."
+  },
+  "contact": {
+    "phone": "",
+    "phoneDisplay": "69xxxxxxxx",
+    "email": "name@example.com"
+  },
+  "look": {
+    "backgroundColor": "#100e0c",
+    "backgroundImage": "",
+    "backgroundPosition": "center center",
+    "backgroundSize": "cover",
+    "backgroundRepeat": "no-repeat",
+    "backgroundOpacity": 0.4,
+    "ink": "#f3ecdf",
+    "paper": "#efe6d6",
+    "clay": "#4a3c36",
+    "lane": "#e23b2f",
+    "button": "#9c241e",
+    "countdownWash": "rgba(243, 236, 223, 0.08)",
+    "sections": {
+      "hero": { "color": "#100e0c", "tone": "dark", "image": "", "position": "center center", "size": "cover", "opacity": 0.4 },
+      "athletes": { "color": "#100e0c", "tone": "dark", "image": "", "position": "center center", "size": "cover", "opacity": 0.4 },
+      "clubs": { "color": "#100e0c", "tone": "dark", "image": "", "position": "center center", "size": "cover", "opacity": 0.4 },
+      "transparency": { "color": "#efe6d6", "tone": "light", "image": "", "position": "center center", "size": "cover", "opacity": 0.4 },
+      "tickets": { "color": "#efe6d6", "tone": "light", "image": "", "position": "center center", "size": "cover", "opacity": 0.4 },
+      "sponsors": { "color": "#4a3c36", "tone": "dark", "image": "", "position": "center center", "size": "cover", "opacity": 0.4 },
+      "contact": { "color": "#4a3c36", "tone": "dark", "image": "", "position": "center center", "size": "cover", "opacity": 0.4 }
+    }
+  },
+  "organizers": [
+    { "name": "Ιορδάνης Αγαπητός" },
+    { "name": "Andreoglou Brothers" }
+  ],
+  "athletes": [],
+  "clubs": [],
+  "sponsors": [],
+  "salePoints": []
+}

@@ -1,0 +1,13 @@
+---
+import type { Named } from '../lib/content';
+
+interface Props {
+  items: Named[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="name-list">
+  {items.map((item) => <li>{item.name}</li>)}
+</ul>

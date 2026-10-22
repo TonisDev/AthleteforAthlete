@@ -1,20 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
-import { event } from '../lib/content';
-import { phoneHref } from '../lib/format';
-
-const description = 'Το αίτημα για εισιτήρια δεν στάλθηκε.';
+import { site } from '../lib/content';
+import { basePath } from '../lib/site';
 ---
 
-<Base title="Δεν στάλθηκε — Athlete for Athlete" description={description}>
+<Base title={`${site.notices.failedTitle} — ${site.title}`} description={site.notices.failedText}>
   <main class="closure">
     <span class="mark" aria-hidden="true"></span>
-    <p class="kicker">Athlete for Athlete</p>
-    <h1>Δεν στάλθηκε.</h1>
-    <p>
-      Πάρε μας στο <a href={phoneHref(event.phone)}>{event.phoneDisplay}</a>
-      ή στείλε στο <a href={`mailto:${event.email}`}>{event.email}</a>.
-    </p>
-    <a class="button" href={`${import.meta.env.BASE_URL}#kratisi`}>Πίσω στη φόρμα</a>
+    <p class="kicker">{site.title}</p>
+    <h1>{site.notices.failedTitle}</h1>
+    <p>{site.notices.failedText}</p>
+    <a class="button" href={`${basePath}#${site.blocks.tickets.id}`}>{site.labels.backToForm}</a>
   </main>
 </Base>

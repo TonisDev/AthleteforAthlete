@@ -1,39 +1,41 @@
 ---
-import { event } from '../lib/content';
-import { phoneHref } from '../lib/format';
+import { site } from '../lib/content';
 import { ticketApi } from '../lib/site';
+
+const form = site.form;
 ---
 
-<form id="ticket-form" class="reserve-form" action={ticketApi} method="post" accept-charset="utf-8">
+<form id="ticket-form" class="reserve-form" action={ticketApi} method="post" accept-charset="utf-8" data-fail={form.fail} data-either={form.either}>
+  <input type="hidden" name="intent" value="tickets" />
   <div class="fields">
     <div class="field">
-      <label for="name">Όνομα</label>
+      <label for="name">{form.name}</label>
       <input id="name" name="name" type="text" autocomplete="name" maxlength="80" required />
     </div>
     <div class="field">
-      <label for="phone">Τηλέφωνο</label>
-      <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="69xxxxxxxx" required />
+      <label for="phone">{form.phone}</label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder={form.phonePlaceholder} />
     </div>
     <div class="field">
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" autocomplete="email" maxlength="120" required />
+      <label for="email">{form.email}</label>
+      <input id="email" name="email" type="email" autocomplete="email" maxlength="120" />
     </div>
     <div class="field">
-      <label for="area">Περιοχή</label>
-      <input id="area" name="area" type="text" autocomplete="address-level2" maxlength="80" placeholder="π.χ. Καλαμαριά" required />
+      <label for="area">{form.area}</label>
+      <input id="area" name="area" type="text" autocomplete="address-level2" maxlength="80" placeholder={form.areaPlaceholder} required />
+    </div>
+    <div class="field">
+      <label for="count">{form.count}</label>
+      <input id="count" name="count" type="number" inputmode="numeric" min="1" max={form.countMax} value="1" required />
     </div>
   </div>
   <div class="hp" aria-hidden="true">
     <label for="company">Εταιρεία</label>
     <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
   </div>
-  <button class="button" type="submit">Στείλε τα στοιχεία</button>
+  <button class="button" type="submit">{form.submit}</button>
   <p class="form-status" data-status role="status"></p>
-  <p class="privacy">
-    Τα στοιχεία χρησιμοποιούνται μόνο για την επικοινωνία σχετικά με τα εισιτήρια αυτής της βραδιάς.
-    Αν προτιμάς, πάρε μας στο <a href={phoneHref(event.phone)}>{event.phoneDisplay}</a>
-    ή στείλε στο <a href={`mailto:${event.email}`}>{event.email}</a>.
-  </p>
+  <p class="privacy">{form.either} {form.privacy}</p>
 </form>
 
 <script>
@@ -47,20 +49,28 @@ import { ticketApi } from '../lib/site';
 
       status.textContent = '';
       status.classList.remove('is-ok', 'is-bad');
+      const data = new FormData(form);
+      const phone = String(data.get('phone') || '').trim();
+      const email = String(data.get('email') || '').trim();
+      if (!phone && !email) {
+        status.textContent = form.dataset.either || '';
+        status.classList.add('is-bad');
+        return;
+      }
       if (button instanceof HTMLButtonElement) button.disabled = true;
 
       try {
         const response = await fetch(form.action, {
           method: 'POST',
-          body: new FormData(form),
+          body: data,
           headers: { accept: 'application/json' },
         });
         const payload = (await response.json()) as { ok?: boolean; message?: string };
-        status.textContent = payload.message || 'Κάτι πήγε στραβά. Δοκίμασε ξανά.';
+        status.textContent = payload.message || form.dataset.fail || '';
         status.classList.add(payload.ok ? 'is-ok' : 'is-bad');
         if (payload.ok) form.reset();
       } catch {
-        status.textContent = 'Δεν στάλθηκε. Πάρε μας τηλέφωνο.';
+        status.textContent = form.dataset.fail || '';
         status.classList.add('is-bad');
       } finally {
         if (button instanceof HTMLButtonElement) button.disabled = false;
