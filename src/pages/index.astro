@@ -17,6 +17,8 @@ const progress = goal > 0 ? Math.min(100, Math.round((sold / goal) * 100)) : 0;
 const when = `${formatWeekday(startsAt)}, ${formatTime(startsAt)}`;
 const phone = reachablePhone(site.contact.phone) ? phoneHref(site.contact.phone) : '';
 const email = reachableEmail(site.contact.email) ? site.contact.email : '';
+const askHeading = site.blocks.sponsors.askTitle || site.blocks.contact.title;
+const askCopy = site.blocks.sponsors.askText || site.blocks.contact.text;
 ---
 
 <Base title={site.title} description={site.description}>
@@ -148,6 +150,7 @@ const email = reachableEmail(site.contact.email) ? site.contact.email : '';
     </div>
   </Surface>
 
+  {site.sponsors.length > 0 && (
   <Surface name="sponsors" class="block anchor" id={site.blocks.sponsors.id}>
     <div class="wrap">
       {site.blocks.sponsors.kicker && <p class="kicker">{site.blocks.sponsors.kicker}</p>}
@@ -183,17 +186,15 @@ const email = reachableEmail(site.contact.email) ? site.contact.email : '';
           </>
         )
       }
-      {site.blocks.sponsors.askTitle && <h2 class="ask-title">{site.blocks.sponsors.askTitle}</h2>}
-      {site.blocks.sponsors.askText && <p class="text">{site.blocks.sponsors.askText}</p>}
-      <a class="button" href="#message">{site.labels.sponsorCta}</a>
     </div>
   </Surface>
+  )}
 
   <Surface name="contact" class="block anchor" id={site.blocks.contact.id}>
     <div class="wrap">
-      {site.blocks.contact.kicker && <p class="kicker">{site.blocks.contact.kicker}</p>}
-      {site.blocks.contact.title && <h2>{site.blocks.contact.title}</h2>}
-      {site.blocks.contact.text && <p class="text">{site.blocks.contact.text}</p>}
+      {site.sponsors.length === 0 && <span id={site.blocks.sponsors.id} class="anchor" />}
+      {askHeading && <h2>{askHeading}</h2>}
+      {askCopy && <p class="text">{askCopy}</p>}
       {
         (phone || email) && (
           <ul class="contact-list">

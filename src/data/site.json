@@ -164,8 +164,27 @@
     { "name": "Ιορδάνης Αγαπητός" },
     { "name": "Andreoglou Brothers" }
   ],
-  "athletes": [],
-  "clubs": [],
-  "sponsors": [],
-  "salePoints": []
+  "athletes": [
+    {
+      "name": "Όνομα Επώνυμο",
+      "discipline": "100 μ.",
+      "achievements": [],
+      "image": ""
+    }
+  ],
+  "clubs": [
+    { "name": "Σύλλογος 1" },
+    { "name": "Σύλλογος 2" },
+    { "name": "Σύλλογος 3" }
+  ],
+  "sponsors": [
+    { "name": "Χορηγός 1", "offer": "", "url": "", "logo": "", "rank": 1, "size": "medium" },
+    { "name": "Χορηγός 2", "offer": "", "url": "", "logo": "", "rank": 2, "size": "medium" },
+    { "name": "Χορηγός 3", "offer": "", "url": "", "logo": "", "rank": 3, "size": "medium" }
+  ],
+  "salePoints": [
+    { "name": "Σημείο 1", "area": "", "address": "", "hours": "", "mapUrl": "" },
+    { "name": "Σημείο 2", "area": "", "address": "", "hours": "", "mapUrl": "" },
+    { "name": "Σημείο 3", "area": "", "address": "", "hours": "", "mapUrl": "" }
+  ]
 }
